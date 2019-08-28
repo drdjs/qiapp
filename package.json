@@ -11,6 +11,7 @@
     "firebase": "^5.7.3",
     "firebase-admin": "^7.3.0",
     "firebase-tools": "^6.2.2",
+    "grpc": "1.23.3",
     "immutable": "^4.0.0-rc.12",
     "immutablediff": "^0.4.4",
     "immutablepatch": "^0.5.0",
@@ -31,7 +32,8 @@
     "semantic-ui-react": "^0.86.0",
     "survey-react": "^1.0.92",
     "universal-cookie": "^3.1.0",
-    "universal-cookie-express": "^3.1.0"
+    "universal-cookie-express": "^3.1.0",
+    "webpack": "^4.39.2"
   },
   "scripts": {
     "dev": "node server.js",

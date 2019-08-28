@@ -1,8 +1,8 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import {createStore,combineReducers, applyMiddleware } from 'redux'
-import thunk from 'redux-thunk'
-
+import {createStore,combineReducers, applyMiddleware } from 'redux-dynamic-modules'
+import {getThunkExtension} from 'redux-dynamic-modules-thunk'
+import {getSagaExtension} from 'redux-dynamic-modules-saga'
 
   
 import App, { Container } from 'next/app'
@@ -16,26 +16,21 @@ import {CookiesProvider,Cookies} from 'react-cookie'
 import withRedux from 'next-redux-wrapper'
 import 'react-datepicker/dist/react-datepicker.css'
 
-function reducer(state,action){
-  return {newstate:1}
-}
-
-const _dynamicReducers={root:reducer}
-function getReducers(){
-  return combineReducers(_dynamicReducers)
-}
-
 const makeStore = (initialState, options) => {
-  const store=createStore(getReducers(), initialState,applyMiddleware(thunk));
+  const store = createStore(
+    {
+        initialState,
+        extensions: [getThunkExtension(),getSagaExtension({})],
+        //enhancers: [],
+        //advancedCombineReducers: null
+    },
+    //UsersModule
+    /* ...any additional modules */
+);
   console.log('store created')
-  store.ensureReducer=function(reducerName,reducer){
-    if (!_dynamicReducers[reducerName]){
-      _dynamicReducers[reducerName]=reducer
-      this.replaceReducer(getReducers())
-    }
-  }
   return store 
 };
+
 
 Router.events.on('routeChangeStart', url => {
   console.log('Navigating to:', url);
@@ -99,6 +94,4 @@ class MyApp extends App {
 }
 
 export default withRedux(makeStore)(MyApp)
-
-//<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossOrigin="anonymous" />
     
