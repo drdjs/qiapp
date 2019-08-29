@@ -12,7 +12,7 @@ const expApp = express()
 const handle = nextApp.getRequestHandler()
 const cookiesMW = require('universal-cookie-express')
 var admin = require("firebase-admin");
-var serviceAccount = require("./credentials.json");
+var serviceAccount = require("../credentials.json");
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://qiexchange-223621.firebaseio.com"
