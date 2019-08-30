@@ -12,7 +12,7 @@ import TopNav from '../lib/topnav.js'
 import {Col} from 'react-bootstrap'
 import {Grid} from 'semantic-ui-react'
 import Router from 'next/router'
-import {CookiesProvider,Cookies} from 'react-cookie'
+import nookies from 'nookies'
 import withRedux from 'next-redux-wrapper'
 import 'react-datepicker/dist/react-datepicker.css'
 
@@ -49,10 +49,6 @@ class MyApp extends App {
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
-    if (ctx.req){
-      //console.log(ctx.req.universalCookies)
-      pageProps._cookies=ctx.req.universalCookies
-    }
 
     return { pageProps }
   }
@@ -60,14 +56,9 @@ class MyApp extends App {
   render () {
 	  console.log('app page')
     const { Component, pageProps, store } = this.props
-    store.dispatch(()=>{console.log('thunk?')})
-    var maybeCookies={}
-    if (pageProps._cookies) maybeCookies={cookies:new Cookies(pageProps._cookies.cookies)}
-    //console.log(maybeCookies)
     return (
       <Container>
 	  <Provider store={store}>
-    <CookiesProvider {...maybeCookies}>
 	  <SigninAssistant>
 	  <div>
 	  <TopNav showbuttons={true}/>
@@ -86,7 +77,7 @@ class MyApp extends App {
     </Head>
         
 	  </SigninAssistant>
-    </CookiesProvider>
+    
     </Provider>
       </Container>
     )
