@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react';
-import {firebase} from '../lib/firebaseapp';
+import {firebase} from 'variable/firebaseapp';
 import {UserContext,AdminContext} from '../lib/signin'
 import {Icon} from 'semantic-ui-react'
 import immutable from 'immutable'
