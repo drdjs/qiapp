@@ -2,10 +2,12 @@
 import React from 'react';
 import {firebase} from '../lib/firebaseapp';
 import {UserContext,AdminContext} from '../lib/signin'
+//eslint-disable-next-line no-unused-vars
 import {Icon} from 'semantic-ui-react'
 import immutable from 'immutable'
+//eslint-disable-next-line no-unused-vars
 import {FormContainer,SubmitButton,CancelButton,InputGroup,DatepickerGroup,TypeaheadGroup,CheckboxGroup,RadioGroup,mandatory,minLength,emailvalidator} from '../lib/formbuilder'
-import Router,{withRouter} from 'next/router'
+import Router from 'next/router'
 
 import staffnames from '../lib/staffnames'
 import taglist from '../lib/taglist'
