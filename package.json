@@ -17,6 +17,7 @@
     "immutablepatch": "^0.5.0",
     "next": "^8.1.0",
     "next-redux-wrapper": "^3.0.0-alpha.2",
+    "nookies": "^2.0.8",
     "react": "^16.8.1",
     "react-bootstrap": "^1.0.0-beta.9",
     "react-cookie": "^3.1.1",
@@ -26,7 +27,9 @@
     "react-redux": "^7.1.0",
     "redux": "^4.0.1",
     "redux-dynamic-modules": "^5.0.1",
+    "redux-dynamic-modules-saga": "^5.0.2",
     "redux-dynamic-modules-thunk": "^5.0.1",
+    "redux-saga": "^1.0.5",
     "redux-thunk": "^2.3.0",
     "semantic-ui-calendar-react": "^0.14.4",
     "semantic-ui-react": "^0.86.0",
@@ -36,9 +39,10 @@
     "webpack": "^4.39.2"
   },
   "scripts": {
-    "dev": "node server.js",
+    "dev": "next",
     "build": "next build",
-    "start": "next start"
+    "start": "next start",
+    "install": "pnpm install --shamefully-flatten"
   },
   "eslintConfig": {
     "extends": "react-app"

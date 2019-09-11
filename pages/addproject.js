@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import React from 'react';
-import {firebase} from '../lib/firebaseapp';
+import {firebase} from 'variable/firebaseapp';
 import {UserContext,AdminContext} from '../lib/signin'
 //eslint-disable-next-line no-unused-vars
 import {Icon} from 'semantic-ui-react'
@@ -16,14 +16,14 @@ console.log('loading addproject')
 var db = firebase.firestore();
 
 async function getInitialProps(ctx){
-	var isAdmin,displayName
+
 	if (ctx.req){
 		console.log(ctx.req.user)
 		isAdmin=ctx.req.user && ctx.req.user.admin 
 		displayName=(ctx.req.user && ctx.req.user.name) || 'Guest'
 	}
-	//const user=React.useContext(UserContext)
-	//const isAdmin=React.useContext(AdminContext)
+	const user=useCurrentUser()
+	const isAdmin=useContext(AdminContext)
 	//if (docref){
 	//	var dbDoc=await (isAdmin?db.collection('privprojects').doc(docref).get():db.collection('pubprojects').doc(docref).get())
 	//	console.log(dbDoc)

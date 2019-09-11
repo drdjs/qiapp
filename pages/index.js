@@ -1,8 +1,8 @@
 import React from 'react';
-import firebase from '../lib/firebaseapp';
+import firebase from 'variable/firebaseapp';
 import Head from 'next/head'
 //import {Col,Label,Panel,Modal,ListGroup,ListGroupItem,PanelGroup,Navbar,Nav,NavItem,Glyphicon,Button} from 'react-bootstrap';
-import {UserContext,AdminContext,SignInScreen,SigninAssistant,useAdminUser,useCurrentUser} from '../lib/signin'
+import {useAdminUser,useCurrentUser} from '../lib/signin'
 const db = firebase.firestore();
 import taglist from '../lib/taglist'
 import Link from 'next/link'
@@ -203,7 +203,7 @@ function DatabaseTable (props) {
     const [docs,setDocs]=React.useState([])
 	const [statusfilter,setstatusfilter]=React.useState('all')
 	const [fallback,setfallback]=React.useState("Loading...");
-    const isAdmin=React.useContext(AdminContext)
+    const isAdmin=useAdminUser()
     React.useEffect(()=>{
 		var query=isAdmin?db.collection("privprojects"):db.collection("pubprojects")
 		if (!isAdmin){

@@ -13,12 +13,21 @@ import {Grid} from 'semantic-ui-react'
 import Router from 'next/router'
 import withRedux from 'next-redux-wrapper'
 import 'react-datepicker/dist/react-datepicker.css'
+import immutable from 'immutable'
+
 
 const makeStore = (initialState, options) => {
+  var sagaExt
+  if (typeof window ==='undefined') {    // hack as writes to window obj in dev mode
+    global.window={}
+    sagaExt=getSagaExtension({})
+    global.window=undefined
+    }
+    else{sagaExt= getSagaExtension({})}
   const store = createStore(
     {
         initialState,
-        extensions: [getThunkExtension(),getSagaExtension({})],
+        extensions: [getThunkExtension(),sagaExt],
         //enhancers: [],
         //advancedCombineReducers: null
     },
@@ -82,6 +91,9 @@ class MyApp extends App {
     )
   }
 }
-
-export default withRedux(makeStore)(MyApp)
+const nrwConfig={
+  serializeState: state=>{for (let k in state){state[k]=state[k].serialize(state[k])}},
+  deserializeState: state=>{for (let k in state){state[k]=eval(state[k].deserialize)(state[k])}}
+}
+export default withRedux(makeStore,nrwConfig)(MyApp)
     
