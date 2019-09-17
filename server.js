@@ -22,14 +22,7 @@ admin.initializeApp({
 nextApp.prepare()
 expApp.use(cookiesMW())
 expApp.use((req,res,next)=> {
-    const idtoken=req.universalCookies.get('idtoken')
-    req.adminInterface=admin
-    //console.log('cookies:',req.universalCookies.getAll())
-    if (idtoken){
-        req.user=admin.auth().verifyIdToken(idtoken)
-    }else{
-        req.user=null
-    }
+    
     next()
 })
 expApp.all('*',(req, res) => {

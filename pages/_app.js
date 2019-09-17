@@ -1,30 +1,37 @@
 import React from 'react'
 import {Provider} from 'react-redux'
-import {createStore,combineReducers, applyMiddleware } from 'redux-dynamic-modules'
+import {createStore} from 'redux-dynamic-modules'
 import {getThunkExtension} from 'redux-dynamic-modules-thunk'
 import {getSagaExtension} from 'redux-dynamic-modules-saga'
 
   
 import App, { Container } from 'next/app'
 import Head from 'next/head'
-import {SigninAssistant} from '../lib/signin'
+import {SigninAssistant, setUserFromContext, getLoginModule} from '../lib/signin'
 import TopNav from '../lib/topnav.js'
-import {Col} from 'react-bootstrap'
 import {Grid} from 'semantic-ui-react'
 import Router from 'next/router'
-import nookies from 'nookies'
 import withRedux from 'next-redux-wrapper'
 import 'react-datepicker/dist/react-datepicker.css'
+import immutable from 'immutable'
+
 
 const makeStore = (initialState, options) => {
+  var sagaExt
+  if (typeof window ==='undefined') {    // hack as writes to window obj in dev mode
+    global.window={}
+    sagaExt=getSagaExtension({})
+    global.window=undefined
+    }
+    else{sagaExt= getSagaExtension({})}
   const store = createStore(
     {
         initialState,
-        extensions: [getThunkExtension(),getSagaExtension({})],
+        extensions: [getThunkExtension(),sagaExt],
         //enhancers: [],
         //advancedCombineReducers: null
     },
-    //UsersModule
+    getLoginModule(options.isServer)
     /* ...any additional modules */
 );
   console.log('store created')
@@ -46,6 +53,7 @@ Router.events.on('routeChangeError',(err,url)=>{
 class MyApp extends App {
   static async getInitialProps({ Component, ctx }) {
     let pageProps = {}
+    await setUserFromContext(ctx.store.dispatch,ctx)
     if (Component.getInitialProps) {
       pageProps = await Component.getInitialProps(ctx)
     }
@@ -83,6 +91,9 @@ class MyApp extends App {
     )
   }
 }
-
-export default withRedux(makeStore)(MyApp)
+const nrwConfig={
+  serializeState: state=>{for (let k in state){state[k]=state[k].serialize(state[k])}},
+  deserializeState: state=>{for (let k in state){state[k]=eval(state[k].deserialize)(state[k])}}
+}
+export default withRedux(makeStore,nrwConfig)(MyApp)
     
