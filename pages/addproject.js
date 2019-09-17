@@ -1,13 +1,13 @@
 /* eslint-disable no-console */
 import React from 'react';
 import {firebase} from 'variable/firebaseapp';
-import {UserContext,AdminContext} from '../lib/signin'
+import {useCurrentUser,useAdminUser} from '../lib/signin'
 //eslint-disable-next-line no-unused-vars
 import {Icon} from 'semantic-ui-react'
 import immutable from 'immutable'
 //eslint-disable-next-line no-unused-vars
 import {FormContainer,SubmitButton,CancelButton,InputGroup,DatepickerGroup,TypeaheadGroup,CheckboxGroup,RadioGroup,mandatory,minLength,emailvalidator} from '../lib/formbuilder'
-import Router from 'next/router'
+import Router,{useRouter} from 'next/router'
 
 import staffnames from '../lib/staffnames'
 import taglist from '../lib/taglist'
@@ -17,19 +17,19 @@ var db = firebase.firestore();
 
 async function getInitialProps(ctx){
 
-	if (ctx.req){
-		console.log(ctx.req.user)
-		isAdmin=ctx.req.user && ctx.req.user.admin 
-		displayName=(ctx.req.user && ctx.req.user.name) || 'Guest'
+	const user=useCurrentUser(ctx)
+	const isAdmin=useAdminUser(ctx)
+	const docid=ctx.query.doc
+	var dbDoc
+	if (docid){
+		if (isAdmin){
+			dbDoc=await db.collection('privprojects').doc(docid).get()
+		}else{
+			dbDoc=db.collection('pubprojects').doc(docid).get()
+		}
+		if (dbDoc) return {initialdata:dbDoc.data()}
 	}
-	const user=useCurrentUser()
-	const isAdmin=useContext(AdminContext)
-	//if (docref){
-	//	var dbDoc=await (isAdmin?db.collection('privprojects').doc(docref).get():db.collection('pubprojects').doc(docref).get())
-	//	console.log(dbDoc)
-	//	if (dbDoc) return {initialdata:dbDoc.data()}
-	//}
-	return {} //{initialdata:{leadername:[user.displayName],propdate:new Date().toISOString()}}
+	return {initialdata:{leadername:[user.displayName],propdate:new Date().toISOString()}}
 }	
 const formdef=[
 	{	name:'title',
@@ -157,17 +157,17 @@ const formdef=[
 		required:true
 	}
 	]
-	
-function ProjectInfoForm(props){
-	const user=React.useContext(UserContext)
-	const isAdmin=React.useContext(AdminContext)
+
+function ProjectInfoForm({initialdata,readonly,docid}){
+	const [user]=useCurrentUser()
+	const [isAdmin]=useAdminUser()
 	
 	React.useEffect(()=>{
 			},[])
-	var initialvalues=props.initialdata
+	var initialvalues=initialdata
 	
 	const handleClose =()=>{
-		props.history.goBack()
+		useRouter().push('/')
 	}
 	
 	async function handleSubmit(){handleClose()}
@@ -215,7 +215,7 @@ function ProjectInfoForm(props){
 			formname='addproject'
 			onSubmit={handleSubmit}
 			onCancel={handleClose}
-			disabled={props.readonly}
+			disabled={readonly}
 			values={initialvalues}
 			formdef={formdef}
 			submitbutton={{icon:"check",content:"Save"}}
