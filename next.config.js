@@ -1,13 +1,17 @@
 const withCSS = require('@zeit/next-css')
 const path=require('path')
 module.exports = withCSS({
-  webpack: function (config,{isServer,webpack}) {
-	if (isServer){
-    config.resolve.alias.variable = path.join(__dirname,'serveronly')
-    config.plugins.push(new webpack.DefinePlugin({'process.env.NODE_ENV':JSON.stringify('production')}))
-    }else{
-	config.resolve.alias.variable= path.join(__dirname,'clientonly')
-		}
+  webpack: function (config,{defaultLoaders,isServer,webpack}) 
+	config.module.rules.push({
+      test: /\.ifdef.js/,
+      use: [
+        defaultLoaders.babel,
+        {
+          loader: 'ifdef-loader',
+          options: {isServer},
+        },
+      ],
+    })
 	
     return config
   }
