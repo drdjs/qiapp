@@ -2,7 +2,7 @@
 import React from 'react';
 import {firebase} from 'variable/firebaseapp';
 import {useCurrentUser,useAdminUser} from '../lib/signin'
-import {Icon} from 'semantic-ui-react'
+import {Icon,Button} from 'semantic-ui-react'
 import immutable from 'immutable'
 //eslint-disable-next-line no-unused-vars
 import {FormContainer,SubmitButton,CancelButton,InputGroup,DatepickerGroup,TypeaheadGroup,CheckboxGroup,RadioGroup,mandatory,minLength,emailvalidator} from '../lib/formbuilder'
@@ -10,6 +10,7 @@ import Router,{useRouter} from 'next/router'
 
 import staffnames from '../lib/staffnames'
 import taglist from '../lib/taglist'
+import * as Yup from 'yup'
 
 console.log('loading addproject')
 var db = firebase.firestore();
@@ -65,15 +66,13 @@ const formdef=[
 	},{
 		name:'category',
 		type:'checkbox',
-		options:taglist,
+		options:taglist.values(),
 		label:'Areas covered',
-		validation:{test:'length',value:{min:1},message:'Please pick at least one option'},
-		validfunc:'expect(field().isNotEmpty(),"Please pick at least one option")'
+		required:true
 	},{
 		name:'othertags',
 		type:'text',
-		displayif:{field:'category',test:'includes',value:'other'},
-		displayfunc:"field('category').includes('other')",
+		displayif:((values)=>(values.category.includes && values.category.includes('other'))),
 		label:"Other areas covered",
 		placeholder:"Other areas covered",
 		required:true
@@ -89,8 +88,7 @@ const formdef=[
 		type:"email",
 		label:"Contact email address for team:",
 		placeholder:"Contact address",
-		validation:{test:'emaillike'},
-		validfunc:'expect(field().isEmail(),"Please enter a valid email address")'
+		validation:Yup.email('Please enter a valid email address'),
 	},{
 		name:'peopleinvolved',
 		type:'typeahead',
@@ -99,13 +97,13 @@ const formdef=[
 		options:staffnames,
 	},{
 		type:'radio',	
-		options:{"Yes":'Yes',"No":'No'},
+		options:[["Yes",'Yes'],["No",'No']],
 		name:'advertise',
 		label:'Would you like us to advertise your project to get more people involved?',
 		required:true
 	},{
 		type:'radio',
-		options:{'Yes':'Yes', 'No':'No'},
+		options:[["Yes",'Yes'],["No",'No']],
 		name:'mm_or_ci',
 		label:'Is this project a result of a Morbidity and Mortality or Critical Incident event?',
 		required:true
@@ -116,7 +114,7 @@ const formdef=[
 				'No':'No - Caldicott approval is not required',
 				'Dontknow':"Don't know - (the QI team will contact you to discuss whether this is needed)",
 				'pending':'Caldicott approval is pending'		
-				},
+				}.entries(),
 		name:'caldicott',
 		label:'Does this project have Caldicott approval?',
 		helptext:'Caldicott approval is required if patient identifiable information is being collected',
@@ -128,10 +126,10 @@ const formdef=[
 			'No':'No - R+D approval is not required',
 			'Dontknow':"Don't know - (the QI team will contact you to discuss whether this is needed)",
 			'pending':'R+D approval is pending'
-			},
+			}.entries(),
 		name:'research',
 		label:'Does this project have R+D approval?',
-		help:(<span>(Required if your project is research. <a href="https://www.nhsggc.org.uk/about-us/professional-support-sites/research-development/for-researchers/is-your-project-research/" target="_blank" rel="noopener noreferrer">Is my project research?</a>)</span>),
+		helptext:(<span>(Required if your project is research. <a href="https://www.nhsggc.org.uk/about-us/professional-support-sites/research-development/for-researchers/is-your-project-research/" target="_blank" rel="noopener noreferrer">Is my project research?</a>)</span>),
 		required:true
 	},{
 		type:'datepicker',
@@ -143,8 +141,7 @@ const formdef=[
 		name:'finishdate',
 		label:"When do you plan to finish or report on this project?",
 		required:true,
-		validation:{test:'value',value:{min:{field:'startdate'}},message:'Finish date must be later than start date'},
-		validfunc:'expect(field()>=field("startdate"),"Finish date must be later than start date")'
+		validation:Yup.date().min(Yup.ref('startdate'),'Finish date must be later than start date'),
 	},{
 		name:'candisplay',
 		type:'radio',
@@ -215,11 +212,16 @@ function ProjectInfoForm({initialdata,readonly,docid}){
 			onSubmit={handleSubmit}
 			onCancel={handleClose}
 			disabled={readonly}
-			values={initialvalues}
+			initialValues={initialvalues}
 			formdef={formdef}
-			submitbutton={{icon:"check",content:"Save"}}
-			cancelbutton={{icon:"cancel",content:"Cancel"}}
-		/>
+			>
+		{(submitForm,resetForm)=>(
+			<>
+			<Button icon='check' onClick={submitForm}>Save</Button>
+			<Button icon="cancel" onClick={resetForm}>Cancel</Button>
+			</>
+		)}
+			</FormContainer>
 		
     
 	
