@@ -4,7 +4,7 @@ import React from 'react'
 import App from 'next/app'
 import Head from 'next/head'
 import {SigninAssistant} from '../lib/signin'
-import TopNav from '../lib/topnav.js'
+import TopNav from '../components/topnav.js'
 import {Grid} from 'semantic-ui-react'
 import { ApolloClient, HttpLink, InMemoryCache,ApolloProvider } from '@apollo/client';
 import withApollo from 'next-with-apollo'
