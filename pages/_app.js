@@ -6,7 +6,7 @@ import Head from 'next/head'
 import {SigninAssistant} from '../lib/signin'
 import TopNav from '../lib/topnav.js'
 import {Grid} from 'semantic-ui-react'
-import { ApolloClient, HttpLink, InMemoryCache,ApolloProvider } from '@apollo/client';
+import { ApolloClient, HttpLink, InMemoryCache,ApolloProvider } from '../lib/apollo';
 import withApollo from 'next-with-apollo'
 
 class MyApp extends App {
@@ -39,8 +39,8 @@ class MyApp extends App {
 export default withApollo(
   ({ ctx, headers, initialState }) =>
     new ApolloClient({
-		link:HttpLink({uri: `${ctx.req?'http://localhost:3000':''}/api/graphql`}),
-		ssrMode:!!ctx.req,
+		link:new HttpLink({uri: `${(ctx && ctx.req)?'http://localhost:3000':''}/api/graphql`}),
+		ssrMode:!!(ctx && ctx.req),
 		cache: new InMemoryCache().restore(initialState || {})
     })
 )(MyApp)

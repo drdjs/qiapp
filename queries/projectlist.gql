@@ -1,0 +1,21 @@
+    query getProjects{
+        projectList{
+            title
+            description
+            leader{
+                id
+                realName
+                userName
+            }
+            peopleinvolved{
+                id
+                realName
+                userName
+            }
+            category {name}
+            candisplay
+            advertise
+            caldicott
+            research
+        }
+    }

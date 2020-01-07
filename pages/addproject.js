@@ -1,11 +1,11 @@
 /* eslint-disable no-console */
 import React from 'react';
-import {firebase} from 'variable/firebaseapp';
+import {firebase} from '../lib/firebaseapp';
 import {useCurrentUser,useAdminUser} from '../lib/signin'
 import {Icon,Button} from 'semantic-ui-react'
 import immutable from 'immutable'
 //eslint-disable-next-line no-unused-vars
-import {FormContainer,SubmitButton,CancelButton,InputGroup,DatepickerGroup,TypeaheadGroup,CheckboxGroup,RadioGroup,mandatory,minLength,emailvalidator} from '../lib/formbuilder'
+import FormContainer from '../lib/formbuilder'
 import Router,{useRouter} from 'next/router'
 
 import staffnames from '../lib/staffnames'
@@ -66,7 +66,7 @@ const formdef=[
 	},{
 		name:'category',
 		type:'checkbox',
-		options:taglist.values(),
+		options:Object.values(taglist),
 		label:'Areas covered',
 		required:true
 	},{
@@ -88,7 +88,7 @@ const formdef=[
 		type:"email",
 		label:"Contact email address for team:",
 		placeholder:"Contact address",
-		validation:Yup.email('Please enter a valid email address'),
+		validation:Yup.string().email('Please enter a valid email address'),
 	},{
 		name:'peopleinvolved',
 		type:'typeahead',
@@ -109,24 +109,24 @@ const formdef=[
 		required:true
 	},{
 		type:'radio',
-		options:{	
+		options:Object.entries({	
 				'Yes':'Yes - it has been approved',
 				'No':'No - Caldicott approval is not required',
 				'Dontknow':"Don't know - (the QI team will contact you to discuss whether this is needed)",
 				'pending':'Caldicott approval is pending'		
-				}.entries(),
+				}),
 		name:'caldicott',
 		label:'Does this project have Caldicott approval?',
 		helptext:'Caldicott approval is required if patient identifiable information is being collected',
 		required:true
 	},{
 		type:'radio',
-		options:{
+		options:Object.entries({
 			'Yes':'Yes - it has been approved',
 			'No':'No - R+D approval is not required',
 			'Dontknow':"Don't know - (the QI team will contact you to discuss whether this is needed)",
 			'pending':'R+D approval is pending'
-			}.entries(),
+			}),
 		name:'research',
 		label:'Does this project have R+D approval?',
 		helptext:(<span>(Required if your project is research. <a href="https://www.nhsggc.org.uk/about-us/professional-support-sites/research-development/for-researchers/is-your-project-research/" target="_blank" rel="noopener noreferrer">Is my project research?</a>)</span>),

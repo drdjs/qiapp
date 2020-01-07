@@ -17,7 +17,7 @@ module.exports = withCSS({
       exclude: /node_modules/,
       loader: 'graphql-tag/loader',
     })
-	
+	  console.log(config.module.rules)
     return config
   }
 })

@@ -6,32 +6,16 @@ import Router from 'next/router'
 import immutable from 'immutable'
 import { Grid, Segment, Table, Label, Modal, Header, Button, Menu, Icon } from 'semantic-ui-react'
 
+/*
 import {firebase} from '../lib/firebaseapp';
-//import { useAdminUser, useCurrentUser } from '../lib/signin'
+import { useAdminUser, useCurrentUser } from '../lib/signin'
 const db = firebase.firestore();
-//import {useSelector,useDispatch} from 'react-redux'
-import {useQuery} from '@apollo/client'
+import {useSelector,useDispatch} from 'react-redux'
+*/
+
+import {useQuery} from '../lib/apollo'
 import { PROJECT_LIST,CURRENT_USER } from '../queries';
 
-const projectInfoTemplate = {
-	title: '',
-	proposername: immutable.List(),
-	description: '',
-	propdate: '',
-	methodology: '',
-	category: [],
-	othertags: [],
-	leadername: [],
-	email: '',
-	peopleinvolved: immutable.Set(),
-	advertise: undefined,   //['yes','no']
-	mm_or_ci: undefined,    //['yes','no']
-	caldicott: undefined,   //['yes','no','pending','dontknow']
-	research: undefined,	   //  "
-	datepicker: '',
-	finishdate: '',
-	candisplay: '',
-}
 
 
 function generateLabels(doc,isAdmin) {
@@ -142,7 +126,7 @@ function DatabaseRow({doc, ...props}) {
 }
 
 
-function* getFirebaseEvents(isAdmin) {
+/* function* getFirebaseEvents(isAdmin) {
 	const firebaseChannel = eventChannel((emit) => {
 		var query = isAdmin ? db.collection("privprojects") : db.collection("pubprojects")
 		if (!isAdmin) {
@@ -174,11 +158,11 @@ function* getFirebaseEvents(isAdmin) {
 		firebaseChannel.close()
 	}
 }
-
+ */
 
 
 function DatabaseTable(props) {
-	const {loading:docsloading,data:docs}=useQuery(PROJECT_LIST)
+	const {loading:docsloading,data:projects}=useQuery(PROJECT_LIST)
 	const {loading:userloading,data:currentuser}=useQuery(CURRENT_USER)
 	
 	const [statusfilter, setstatusfilter] = React.useState('all')
@@ -186,7 +170,8 @@ function DatabaseTable(props) {
 
 
 	if (!currentuser) return "Waiting for user"
-	var listitems = docs.filter(
+	
+	var listitems = projects.projectList.filter(
 		(doc) => {
 			switch (statusfilter) {
 				case "all":
