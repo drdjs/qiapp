@@ -6,16 +6,8 @@ import Router from 'next/router'
 import immutable from 'immutable'
 import { Grid, Segment, Table, Label, Modal, Header, Button, Menu, Icon } from 'semantic-ui-react'
 
-/*
-import {firebase} from '../lib/firebaseapp';
-import { useAdminUser, useCurrentUser } from '../lib/signin'
-const db = firebase.firestore();
-import {useSelector,useDispatch} from 'react-redux'
-*/
-
 import {useQuery} from '../lib/apollo'
 import { PROJECT_LIST,CURRENT_USER } from '../queries';
-
 
 
 function generateLabels(doc,isAdmin) {
@@ -126,39 +118,6 @@ function DatabaseRow({doc, ...props}) {
 }
 
 
-/* function* getFirebaseEvents(isAdmin) {
-	const firebaseChannel = eventChannel((emit) => {
-		var query = isAdmin ? db.collection("privprojects") : db.collection("pubprojects")
-		if (!isAdmin) {
-			query = query.where('candisplay', '==', 'Yes').where('commit', '==', true)
-		}
-		return query.onSnapshot((querySnapshot) => {
-			for (let docChange of querySnapshot.docChanges()) {
-				switch (docChange.type) {
-					case 'added':
-						emit({ type: 'addDocument', doc: docChange.doc })
-						break
-					case 'modified':
-						emit({ type: 'modifyDocument', doc: docChange.doc })
-						break
-					case 'removed':
-						emit({ type: 'deleteDocument', docid: docChange.doc.id })
-						break
-				}
-			}
-		})
-    })
-	try {
-		while (true) {
-			var evt = yield take(firebaseChannel)
-			yield put(evt)
-		}
-	}
-	finally {
-		firebaseChannel.close()
-	}
-}
- */
 
 
 function DatabaseTable(props) {
@@ -204,7 +163,5 @@ function DatabaseTable(props) {
 		<Table celled selectable id="accordion-example"><Table.Body>{listitems}</Table.Body></Table>
 	</div>)
 }
-
-
 
 export default DatabaseTable

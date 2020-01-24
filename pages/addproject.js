@@ -6,6 +6,7 @@ import {Icon,Button,Label} from 'semantic-ui-react'
 import immutable from 'immutable'
 //eslint-disable-next-line no-unused-vars
 import FormContainer from '../lib/formbuilder'
+
 import Router,{useRouter} from 'next/router'
 
 import staffnames from '../lib/staffnames'
@@ -14,7 +15,6 @@ import * as Yup from 'yup'
 
 console.log('loading addproject')
 var db = firebase.firestore();
-
 
 
 const StaffContext=React.createContext()
@@ -283,7 +283,6 @@ function ProjectInfoForm(){
 	
             
           </div>
-		
 		<hr/>
           
             
