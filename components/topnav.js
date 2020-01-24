@@ -1,5 +1,4 @@
 import React from 'react';
-//import {Col,Label,Panel,Modal,ListGroup,ListGroupItem,PanelGroup,Navbar,Nav,NavItem,Glyphicon,Button} from 'react-bootstrap';
 import {useCurrentUser,useAdminUser,signout} from '../lib/signin'
 import Link from 'next/link'
 import {Menu,Icon} from 'semantic-ui-react'
