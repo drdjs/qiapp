@@ -1,0 +1,103 @@
+
+    enum YesNoPending{
+        Yes
+        No
+        Pending
+        DontKnow
+    }
+    enum StaffType{
+        FY1
+        FY2
+        ACCS
+        Core
+        Int
+        Higher
+        SAS
+        Consultant
+    }
+    scalar Date
+
+    type User{
+        id:ID
+        userName:String
+        realName:String
+        email:String
+        category:StaffType
+        isAdmin:Boolean
+    }
+    type Category{
+        id:ID 
+        name:String
+    }
+	type ProjectPeople{
+		proposers:[User]
+		leaders:[User]
+		involved:[User]
+		}
+		
+	type ProjectDates{
+		proposed: Date
+		start: Date
+		finish: Date
+	}
+	
+    type Project{
+        title: String!
+		people:ProjectPeople
+	    description: String!
+		dates:ProjectDates
+	    methodology: String!
+	    category: [Category]
+	    email: String
+	    advertise: Boolean
+	    mm_or_ci: Boolean
+	    caldicott: YesNoPending
+	    research: YesNoPending
+        candisplay: Date
+    }
+	
+	input UserInput{
+        id:ID
+        realName:String
+        email:String
+        category:StaffType
+    }
+	input ProjectPeopleInput{
+		proposers:[ID]
+		leaders:[ID]
+		involved:[ID]
+		new:[UserInput]
+		}
+	input ProjectDatesInput{
+		proposed: Date
+		start: Date
+		finish: Date
+	}
+	input ProjectInput{
+		title: String!
+	    people: ProjectPeopleInput
+	    description: String!
+	    propdate: Date!
+	    methodology: String!
+	    category: [ID]
+	    othertags: [String]
+	    email: String
+	    advertise: Boolean
+	    mm_or_ci: Boolean
+	    caldicott: YesNoPending
+	    research: YesNoPending
+	    startdate: Date
+	    finishdate: Date
+        candisplay: Date
+		}
+type Query {
+    getLoggedInUser:User
+    getProject(id:ID):Project
+    projectList:[Project]
+    allUsers: [User!]!
+    getUser(id:ID):User
+}
+
+type Mutation {
+	addProject(project:ProjectInput):Project
+}

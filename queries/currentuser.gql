@@ -1,0 +1,8 @@
+    query currentuser{
+        getLoggedInUser{
+                userName
+                realName
+                email
+                isAdmin
+        }
+    }
